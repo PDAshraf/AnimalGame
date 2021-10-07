@@ -1,9 +1,13 @@
+import java.util.ArrayList;
 public class Player {
     /**
      * Instantiate player name + start budget
      */
     String m_name;
     int m_budget;
+
+    //ArrayList<Player> = new ArrayList();
+
     public void setPlayer(String name, int budget){
         m_name=name;
         m_budget=budget;
