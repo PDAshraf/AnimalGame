@@ -48,7 +48,7 @@ public class Game {
                 System.out.println("*".repeat(50));
 
                 System.out.println("**Round "+i+"**Of*"+Rounds+"**");
-                System.out.println("It's "+ player.get(j-1).getPlayerName()+"'s turn and you have "+player.get(j-1).budget+"&.");
+                System.out.println("It's "+ player.get(j-1).getPlayerName()+"'s turn and you have "+player.get(j-1).budget+"$.");
 
                 player.get(j-1).printAnimals();
                 System.out.println(" ");

@@ -3,7 +3,6 @@ public abstract class Food {
     public int price;
     public int amount;
 
-
     public Food(String name, int price){
         this.name=name;
         this.price=price;

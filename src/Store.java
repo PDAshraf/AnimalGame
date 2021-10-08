@@ -13,13 +13,14 @@ public class Store {
         boolean playerChoose = true;
         System.out.println("Chose a number to buy animal(1-5)");
         while (playerChoose) {
+            int i=1;
             System.out.println("1.Cow(200$) 2.Cat(50$) 3.Dog(100$) 4.Chicken(20$)");
             int animChoice = animalChoice();
             System.out.println("Chose Gender\n 1.Male  2.Female");
             int gendChoice = genderChoice();
             System.out.println("Name your animal: ");
             String name = myScan.next();
-
+            playerChoose=false;
         }
     }
 
@@ -77,7 +78,7 @@ public class Store {
             System.out.println("Please choose the number for food you'd like to buy.");
             System.out.println("1.Vegetable(3kr/kg) 2.Meat(5kr/kg) 3.Milk(2kr/kg) 4.Seed(2kr/kg");
             int foodChoice = myScan.nextInt();
-            int amount;
+            int amount,i=1;
             switch (foodChoice) {
                 case 1: //Vegetable
                     System.out.println("Amount of vegetables to buy: ");
@@ -106,8 +107,7 @@ public class Store {
                 default:
                     System.out.println("Invalid input,try again");
             }
-
-
+            playerFood=false;
         }
     }
 
