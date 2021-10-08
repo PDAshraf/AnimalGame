@@ -28,7 +28,7 @@ public class Game {
         /**
          * Amount of player choice
          */
-        System.out.println("How many players?(1-4)");
+        menu.printAskForPlayers();
         amountPlayers();
         /**
          * Loop amount of players to init names and budget of each player
