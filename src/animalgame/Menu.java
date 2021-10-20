@@ -1,3 +1,5 @@
+package animalgame;
+
 public class Menu {
     public void printRoundChoice() {
         System.out.println("Chose rounds to play. 5-30 rounds");
@@ -9,7 +11,6 @@ public class Menu {
 
     public void printChoiceMenu() {
         System.out.println("Make a choice: ");
-        System.out.println("1.Buy Animals  2.Buy Food   3.Feed animals   4.Breed animals  5.Sell animals");
+        System.out.println("1.Buy Animals  2.Buy animalgame.food.abstractmodels.Food   3.Feed animals   4.Breed animals  5.Sell animals");
     }
-
 }

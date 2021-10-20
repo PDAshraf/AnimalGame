@@ -1,21 +1,30 @@
-public class Chicken extends Animal { // meat milk
+package animalgame.animals;
 
-    public Chicken(String name, String gender) {
+import animalgame.*;
+import animalgame.animals.abstractmodels.Animal;
+import animalgame.food.abstractmodels.Food;
+import animalgame.food.Hay;
+import animalgame.food.Meat;
+import animalgame.food.Seed;
+
+public class Cow extends Animal { // meat milk
+
+    public Cow(String name, String gender) {
         super(name, gender);
-        super.price=20;
-        super.health=20;
+        super.price=200;
+        super.health=100;
     }
 
     public String getSpecies(){
-        String species ="Chicken";
+        String species ="animalgame.animals.Cow";
         return species;
     }
 
     public void eat(Food food, Player player, int indexChosen, int amountFood) { //Cats eat meat/milk
-        if (food instanceof Hay) {
+        if (food instanceof Meat) {
             System.out.println("Not valid food");
-        } else if ((food instanceof Meat) || (food instanceof Seed)) {
-            System.out.println("**Chicken Eating**");
+        } else if ((food instanceof Hay) || (food instanceof Seed)) {
+            System.out.println("**animalgame.animals.Cow Eating**");
             gainHealth(food,player,indexChosen,amountFood);
         }
     }

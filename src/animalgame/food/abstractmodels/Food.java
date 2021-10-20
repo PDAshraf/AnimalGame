@@ -1,3 +1,5 @@
+package animalgame.food.abstractmodels;
+
 public abstract class Food {
     public String name;
     public int price;

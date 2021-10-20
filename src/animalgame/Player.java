@@ -1,3 +1,7 @@
+package animalgame;
+
+import animalgame.animals.abstractmodels.Animal;
+import animalgame.food.abstractmodels.Food;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -75,7 +79,7 @@ public class Player {
             /**
              * Fitst animal mate choice
              */
-            System.out.println("Chose Animal to mate with another: ");
+            System.out.println("Chose animalgame.animals.abstractmodels.Animal to mate with another: ");
             int c0 = myScan.nextInt();
             Animal mate0 = this.animalList.get(c0);
 
@@ -107,6 +111,10 @@ public class Player {
     }
     public String getPlayerName(){
         return playerName;
+    }
+
+    public void deliverAnimals(ArrayList<Animal> animalChoice) {
+        animalList.addAll(animalChoice);
     }
 
     class GetResult implements Comparator<Player> {

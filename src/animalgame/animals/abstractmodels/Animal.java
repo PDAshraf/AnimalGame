@@ -1,4 +1,13 @@
-//superclass Animal
+package animalgame.animals.abstractmodels;
+
+import animalgame.food.abstractmodels.Food;
+import animalgame.Player;
+import animalgame.animals.Cat;
+import animalgame.animals.Chicken;
+import animalgame.animals.Cow;
+import animalgame.animals.Dog;
+
+//superclass animalgame.animals.abstractmodels.Animal
 public abstract class Animal {
     public String name;
     private String gender;
@@ -21,16 +30,12 @@ public abstract class Animal {
     public abstract void gainHealth(Food food, Player player, int indexChosen, int amountOfFood);
 
 
-    public void die(Player player) {
-        System.out.println(this + "is dead:( You can't reach" + this + " anymore");
-        player.animalList.remove(this);
-    }
 
     public void newBorn(Animal animal, Player player, String babyName) {
         int randomGender = (int) (Math.random() * 2) + 1;
         switch (randomGender) {
             case 1:
-                System.out.println("Male Animal Generated");
+                System.out.println("Male animalgame.animals.abstractmodels.Animal Generated");
                 if (animal instanceof Dog) {
                     player.animalList.add(new Dog(babyName, "male"));
                 } else if (animal instanceof Cat) {
@@ -43,7 +48,7 @@ public abstract class Animal {
                 break;
 
             case 2:
-                System.out.println("Female Animal Generated");
+                System.out.println("Female animalgame.animals.abstractmodels.Animal Generated");
                 if (animal instanceof Dog) {
                     player.animalList.add(new Dog(babyName, "female"));
                 } else if (animal instanceof Cat) {

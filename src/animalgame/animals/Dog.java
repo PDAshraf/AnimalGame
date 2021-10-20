@@ -1,13 +1,22 @@
-public class Cat extends Animal { // meat milk
+package animalgame.animals;
 
-    public Cat(String name, String gender) {
+import animalgame.*;
+import animalgame.animals.abstractmodels.Animal;
+import animalgame.food.abstractmodels.Food;
+import animalgame.food.Meat;
+import animalgame.food.Milk;
+import animalgame.food.Vegetables;
+
+public class Dog extends Animal { // meat milk
+
+    public Dog(String name, String gender) {
         super(name, gender);
-        super.price=50;
-        super.health=40;
+        super.price=100;
+        super.health=75;
     }
 
     public String getSpecies(){
-        String species ="Cat";
+        String species ="animalgame.animals.Dog";
         return species;
     }
 
@@ -15,7 +24,7 @@ public class Cat extends Animal { // meat milk
         if (food instanceof Vegetables) {
             System.out.println("Not valid food");
         } else if ((food instanceof Meat) || (food instanceof Milk)) {
-            System.out.println("**Cat Eating**");
+            System.out.println("**animalgame.animals.Dog Eating**");
             gainHealth(food,player,indexChosen,amountFood);
         }
     }

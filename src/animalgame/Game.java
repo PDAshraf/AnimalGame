@@ -1,23 +1,32 @@
+package animalgame;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * This is the game class that...
+ * @author Ashraf, Sharshar
+ */
 public class Game {
 
     public Scanner myScan;
-    public ArrayList<Player> player;
+    public ArrayList<Player> players;
     public int menMatch;
     public Store store;
     public Menu menu;
-    private int valPlayers,Rounds,menuChoice;
+    private int valPlayers, rounds,menuChoice;
 
+    /**
+     * Game construector
+     */
     public Game() {
         myScan = new Scanner(System.in);
-        player = new ArrayList<>();
+        players = new ArrayList<>();
         store = new Store();
         menu = new Menu();
 
 
-        System.out.println("Animal game. Let's Start!");
+        System.out.println("animalgame.animals.abstractmodels.Animal game. Let's Start!");
 
         /**
          * Amount of rounds chioce
@@ -35,48 +44,48 @@ public class Game {
          */
         for (int i=0;i<valPlayers;i++){
             int j= i+1;
-            System.out.println("Name of Player"+j+": ");
+            System.out.println("Name of animalgame.Player"+j+": ");
             String name = myScan.next();
             Player p = new Player(name,10000);
-            player.add(p);
+            players.add(p);
         }
 
-        System.out.println("Lets go.."+Rounds+" Rounds!");
-        for(int i=1; i<=Rounds;i++){
+        System.out.println("Lets go.."+ rounds +" Rounds!");
+        for(int i = 1; i<= rounds; i++){
 
             for(int j=1;j<=valPlayers;j++){
                 System.out.println("*".repeat(50));
 
-                System.out.println("**Round "+i+"**Of*"+Rounds+"**");
-                System.out.println("It's "+ player.get(j-1).getPlayerName()+"'s turn and you have "+player.get(j-1).budget+"$.");
+                System.out.println("**Round "+i+"**Of*"+ rounds +"**");
+                System.out.println("It's "+ players.get(j-1).getPlayerName()+"'s turn and you have "+ players.get(j-1).budget+"$.");
 
-                player.get(j-1).printAnimals();
+                players.get(j-1).printAnimals();
                 System.out.println(" ");
-                player.get(j-1).printFood();
+                players.get(j-1).printFood();
                 System.out.println(" ");
                 menu.printChoiceMenu();
                 menuChoice();
                 switch (menuChoice) {
                     case 1 -> {
                         System.out.println("**Buy Animals**");
-                        store.buyAnimal(player.get(j - 1));
+                        store.buyAnimal(players.get(j - 1));
                     }
                     case 2 -> {
-                        System.out.println("**Buy Food**");
-                        store.buyFood(player.get(j - 1));
+                        System.out.println("**Buy animalgame.food.abstractmodels.Food**");
+                        store.buyFood(players.get(j - 1));
 
                     }
                     case 3 -> {
-                        System.out.println("**Feed Animal**");
-                        player.get(j - 1).feedAnimal();
+                        System.out.println("**Feed animalgame.animals.abstractmodels.Animal**");
+                        players.get(j - 1).feedAnimal();
                     }
                     case 4 -> {
                         System.out.println("**Mate Animals");
-                        player.get(j - 1).mateAnimal();
+                        players.get(j - 1).mateAnimal();
                     }
                     case 5 -> {
-                        System.out.println("**Sell Animal**");
-                        store.sellAnimal(player.get(j - 1));
+                        System.out.println("**Sell animalgame.animals.abstractmodels.Animal**");
+                        store.sellAnimal(players.get(j - 1));
                     }
                     default -> {
                         System.out.println("Choose 1-5 ");
@@ -91,10 +100,10 @@ public class Game {
      * Method to init Rounds
      */
     public void amountRounds() {
-        Rounds = myScan.nextInt();
-            while (Rounds < 5 || Rounds > 30) {
+        rounds = myScan.nextInt();
+            while (rounds < 5 || rounds > 30) {
                 System.out.println("Chose between 5-30 rounds");
-                Rounds = myScan.nextInt();
+                rounds = myScan.nextInt();
             }
     }
 
