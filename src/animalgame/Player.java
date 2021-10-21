@@ -117,6 +117,11 @@ public class Player {
         animalList.addAll(animalChoice);
     }
 
+    public void deliverFood(ArrayList<Food> foodChosen) {
+        foodList.addAll(foodChosen);
+    }
+
+
     class GetResult implements Comparator<Player> {
         public int compare(Player o1, Player o2) {
             return o1.budget - o2.budget;

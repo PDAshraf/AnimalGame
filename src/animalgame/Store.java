@@ -22,7 +22,7 @@ public class Store {
         System.out.println("Chose a number to buy animal(1-5)");
         while (playerChoose) {
             int i=1;
-            System.out.println("1.animalgame.animals.Cow(200$) 2.animalgame.animals.Cat(50$) 3.animalgame.animals.Dog(100$) 4.animalgame.animals.Chicken(20$)");
+            System.out.println("1.Cow(200$) 2.Cat(50$) 3.Dog(100$) 4.Chicken(20$)");
             int animaChoice = animalChoice();
             System.out.println("Chose Gender\n 1.Male  2.Female");
             int gendChoice = genderChoice();
@@ -65,18 +65,16 @@ public class Store {
                 for (int i = 0; i < player.animalList.size(); i++) {// visa animals
                     System.out.println(i + "." + player.animalList.get(i).name);
                 }
-                System.out.println("Please choose which animalgame.animals.abstractmodels.Animal you'd like to sell.");
+                System.out.println("Please choose which Animal you'd like to sell.");
                 int indexChosen = myScan.nextInt();//player choose index for animal to sel;
                 Animal animalToSell = player.animalList.get(indexChosen);//get animal from the list
 
                 int currentHealth = animalToSell.health;
                 int priceToSell = 0;
-                priceToSell = animalToSell.price;
+                priceToSell = animalToSell.price+(currentHealth*2);
                 System.out.println(animalToSell.name + "is sold for " + priceToSell);
                 player.animalList.remove(animalToSell);
                 player.budget = player.budget + priceToSell;
-
-
         }
     }
 
@@ -84,41 +82,42 @@ public class Store {
     public void buyFood(Player player) {
         ArrayList<Food> foodChosen = new ArrayList<>();
         ArrayList<Integer> amountChosen = new ArrayList<>();
-        boolean playerFood = true;
-        while (playerFood) {
             System.out.println("Please choose the number for food you'd like to buy.");
-            System.out.println("1.Vegetable(3kr/kg) 2.animalgame.food.Meat(5kr/kg) 3.animalgame.food.Milk(2kr/kg) 4.animalgame.food.Seed(2kr/kg");
+            System.out.println("1.Vegetable(3kr/kg) 2.Meat(5kr/kg) 3.Milk(2kr/kg) 4.Seed(2kr/kg");
             int foodChoice = myScan.nextInt();
             int amount,i=1;
+
             switch (foodChoice) {
                 case 1: //Vegetable
                     System.out.println("Amount of vegetables to buy: ");
                     amount=myScan.nextInt();
-                    foodChosen.add(new Vegetables("animalgame.food.Vegetables", 3));
+                    foodChosen.add(new Vegetables("Vegetables", 3));
                     amountChosen.add(amount);
+                    player.deliverFood(foodChosen);
                     break;
                 case 2: //animalgame.food.Meat
-                    System.out.println("Amount of animalgame.food.Meat to buy: ");
+                    System.out.println("Amount of Meat to buy: ");
                     amount = myScan.nextInt();
-                    foodChosen.add(new Meat("animalgame.food.Meat", 5));
+                    foodChosen.add(new Meat("Meat", 5));
                     amountChosen.add(amount);
+                    player.deliverFood(foodChosen);
                     break;
                 case 3://animalgame.food.Milk
-                    System.out.println("Amount of animalgame.food.Milk to buy: ");
+                    System.out.println("Amount of Milk to buy: ");
                     amount = myScan.nextInt();
-                    foodChosen.add(new Milk("animalgame.food.Milk", 2));
+                    foodChosen.add(new Milk("Milk", 2));
                     amountChosen.add(amount);
+                    player.deliverFood(foodChosen);
                     break;
                 case 4:
-                    System.out.println("Amount of animalgame.food.Seed to buy: ");
+                    System.out.println("Amount of Seed to buy: ");
                     amount = myScan.nextInt();
-                    foodChosen.add(new Seed("animalgame.food.Seed", 2));
+                    foodChosen.add(new Seed("Seed", 2));
                     amountChosen.add(amount);
+                    player.deliverFood(foodChosen);
                     break;
                 default:
                     System.out.println("Invalid input,try again");
-            }
-            playerFood=false;
         }
     }
 
@@ -165,5 +164,3 @@ public class Store {
         }
     }
 }
-
-

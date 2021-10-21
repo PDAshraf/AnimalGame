@@ -26,7 +26,7 @@ public class Game {
         menu = new Menu();
 
 
-        System.out.println("animalgame.animals.abstractmodels.Animal game. Let's Start!");
+        System.out.println("Animal game. Let's Start!");
 
         /**
          * Amount of rounds chioce
@@ -44,7 +44,7 @@ public class Game {
          */
         for (int i=0;i<valPlayers;i++){
             int j= i+1;
-            System.out.println("Name of animalgame.Player"+j+": ");
+            System.out.println("Name of Player "+j+": ");
             String name = myScan.next();
             Player p = new Player(name,10000);
             players.add(p);
@@ -71,12 +71,12 @@ public class Game {
                         store.buyAnimal(players.get(j - 1));
                     }
                     case 2 -> {
-                        System.out.println("**Buy animalgame.food.abstractmodels.Food**");
+                        System.out.println("**Buy Food**");
                         store.buyFood(players.get(j - 1));
 
                     }
                     case 3 -> {
-                        System.out.println("**Feed animalgame.animals.abstractmodels.Animal**");
+                        System.out.println("**Feed Animal**");
                         players.get(j - 1).feedAnimal();
                     }
                     case 4 -> {
@@ -84,7 +84,7 @@ public class Game {
                         players.get(j - 1).mateAnimal();
                     }
                     case 5 -> {
-                        System.out.println("**Sell animalgame.animals.abstractmodels.Animal**");
+                        System.out.println("**Sell Animal**");
                         store.sellAnimal(players.get(j - 1));
                     }
                     default -> {
