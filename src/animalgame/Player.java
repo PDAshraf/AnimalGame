@@ -1,130 +1,228 @@
 package animalgame;
 
+import animalgame.animals.Cat;
+import animalgame.animals.Chicken;
+import animalgame.animals.Cow;
+import animalgame.animals.Dog;
 import animalgame.animals.abstractmodels.Animal;
+import animalgame.food.*;
 import animalgame.food.abstractmodels.Food;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Scanner;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 
 public class Player {
-    public ArrayList<Animal> animalList;
-    public ArrayList<Food> foodList;
-    public Scanner myScan;
-    public int budget;
-    private String playerName;
+    private int playerCash;
+    private final String playerName;
+    public CopyOnWriteArrayList<Animal> playerAnimals = new CopyOnWriteArrayList<>();
+    public CopyOnWriteArrayList<Animal> playerDeadAnimals = new CopyOnWriteArrayList<>();
+    private final Scanner scanner = new Scanner(System.in);
+    public Hay hay = new Hay();
+    public Meat meat = new Meat();
+    public Milk milk = new Milk();
+    public Seed seed = new Seed();
+    public Vegetables vegetables = new Vegetables();
 
-    public Player(String playerName, int budget) {
-        this.playerName = playerName;
-        this.budget = budget;
-        animalList = new ArrayList<>();
-        foodList = new ArrayList<>();
-        myScan = new Scanner(System.in);
+    public Player(int startCash, String name){
+        this.playerCash = startCash;
+        this.playerName = name;
     }
 
-    public void printAnimals() {
-        System.out.println("Your animals:");
-        for (int i = 0; i < this.animalList.size(); i++) {
-            System.out.println(this.animalList.get(i).name + ". Health: " + this.animalList.get(i).health);
-        }
+    /***
+     * Gets players current amount of money
+     *
+     * @return int, players cash
+     */
+    public int getPlayerCash() {
+        return playerCash;
     }
 
-    public void printFood() {
-        System.out.println("Your stored food: ");
-        for (int i = 0; i < this.foodList.size(); i++) {
-            System.out.println(this.foodList.get(i).name + ".  Amount: " + this.foodList.get(i).amount);
-        }
+    /***
+     * Sets players cash
+     *
+     * @param playerCash int, player cash
+     */
+    public void setPlayerCash(int playerCash) {
+        this.playerCash = playerCash;
     }
 
-    public void feedAnimal() {
-        if (this.animalList.isEmpty() || this.foodList.isEmpty()) {
-            System.out.println("Not valid option");
-        } else {
-            /**
-             * Print animal to choose
-             */
-            printAnimals();
-            System.out.println("Choose animal to feed: ");
-            int indexC0 = myScan.nextInt();
-            Animal animalChoice = animalList.get(indexC0);
-            /**
-             * Print food to choose.
-             */
-            printFood();
-            System.out.println("Chose food: ");
-            int indexC1 = myScan.nextInt();
-            Food foodChoice = this.foodList.get(indexC1);
-
-            System.out.println("You got" + foodChoice.amount + "kg of" + foodChoice.name);
-            System.out.println("How much to feed: ");
-
-            /**
-             * Generate new values to list refering to amount choosen
-             */
-            int amountChoosen = myScan.nextInt();
-            if (amountChoosen == foodChoice.amount) {
-                this.foodList.remove(foodChoice);
-            } else {
-                foodChoice.amount = foodChoice.amount - amountChoosen;
-            }
-        }
-    }
-
-    public void mateAnimal() {
-        if ((animalList.isEmpty()) || (animalList.size() == 1)) {
-            System.out.println("No animal available");
-        } else {
-            printAnimals();
-
-            /**
-             * Fitst animal mate choice
-             */
-            System.out.println("Chose animalgame.animals.abstractmodels.Animal to mate with another: ");
-            int c0 = myScan.nextInt();
-            Animal mate0 = this.animalList.get(c0);
-
-            /**
-             * Second animal mate choice
-             */
-            System.out.println("Choose second animal to mate with another: ");
-            int c1 = myScan.nextInt();
-            Animal mate1 = this.animalList.get(c1);
-
-            if ((mate0.getGender()==mate1.getGender())&& (mate0.getClass()== mate1.getClass())){
-                System.out.println("Cant mate same gender");
-            }else if(!(mate0.getClass()== mate1.getClass())){
-                System.out.println("Cant mate with other species");
-            }else{
-                int Rand = (int) (Math.random() * 2)+1;
-                switch (Rand) {
-                    case 1:
-                        System.out.println("Mate unsuccessful");
-                        break;
-                    case 2: // pairing succeeded
-                        System.out.println("Name the newborn");
-                        String babyName = myScan.next();
-                        mate0.newBorn(mate1,this,babyName);
-                        break;
-                }
-            }
-        }
-    }
-    public String getPlayerName(){
+    /***
+     * Gets players name
+     *
+     * @return String players name
+     */
+    public String getPlayerName() {
         return playerName;
     }
 
-    public void deliverAnimals(ArrayList<Animal> animalChoice) {
-        animalList.addAll(animalChoice);
-    }
 
-    public void deliverFood(ArrayList<Food> foodChosen) {
-        foodList.addAll(foodChosen);
-    }
-
-
-    class GetResult implements Comparator<Player> {
-        public int compare(Player o1, Player o2) {
-            return o1.budget - o2.budget;
+    public void addPlayerFood(Food food){
+        switch (food.getType()) {
+            case HAY -> this.hay.addAmountOwned();
+            case MEAT -> this.meat.addAmountOwned();
+            case MILK -> this.milk.addAmountOwned();
+            case SEED -> this.seed.addAmountOwned();
+            case VEGETABLES -> this.vegetables.addAmountOwned();
         }
     }
+
+
+    public int getPlayerFood(Food food){
+        int none = 0;
+        return switch (food.getType()) {
+            case HAY -> this.hay.getAmountOwned();
+            case MEAT -> this.meat.getAmountOwned();
+            case MILK -> this.milk.getAmountOwned();
+            case SEED -> this.seed.getAmountOwned();
+            case VEGETABLES -> this.vegetables.getAmountOwned();
+            default -> none;
+        };
+    }
+
+    /***
+     * Removed a single food of type food
+     * @param food Food, type of food
+     */
+    public void removePlayerFood(Food food){
+        String foodType = String.valueOf(food.getType());
+        switch (foodType) {
+            case "HAY" -> this.hay.removeAmountOwned();
+            case "MEAT" -> this.meat.removeAmountOwned();
+            case "MILK" -> this.milk.removeAmountOwned();
+            case "SEED" -> this.seed.removeAmountOwned();
+            case "VEGETABLES" -> this.vegetables.removeAmountOwned();
+            default -> throw new IllegalStateException("Unexpected value: " + food);
+        }
+    }
+
+    /***
+     * Creates animals that are bought from the store
+     * Lets' player chose sex and name of animal bought in store
+     *
+     * @param animal Animal, type of animal to spawn
+     */
+    public void spawnAnimalfromStore(Animal animal){
+        Animal blob = AnimalFactorySpawn(animal);
+
+        System.out.println("Chose gender (M/F): ");
+        String sex = scanner.next();
+        if (sex.equalsIgnoreCase("M")) {
+            blob.setSex(Animal.Sex.MALE);
+        }
+        else if (sex.equalsIgnoreCase("F")) {
+            blob.setSex(Animal.Sex.FEMALE);
+        } else {
+            System.out.println("Couldn't hear you, you got a " + animal.getSex());
+        }
+        System.out.println("Name the animal: ");
+        blob.setName(scanner.next());
+        playerAnimals.add(blob);
+    }
+
+    /***
+     * Creates animals that are made from breeding
+     * Lets' player set name only, randomly assigns sex
+     *
+     * @param animal Animal, type of animal to spawn
+     */
+    public void spawnAnimalfromBreeding(Animal animal){
+        Animal blob = AnimalFactorySpawn(animal);
+        System.out.println("Congratulations, it's a " + blob.getSex() + " " + blob.getType());
+        System.out.println("Name the animal: ");
+        blob.setName(scanner.next());
+        playerAnimals.add(blob);
+    }
+
+    /***
+     * Prints players currently owned animals
+     */
+    public void countAnimals(){
+        if(playerAnimals.size() != 0){
+            for(Animal animal:playerAnimals) {
+                System.out.println(animal.getName() + " the " + animal.getType() + " (" + animal.getSex() + "), " + animal.getHealth() + "% happy");
+            } }else {
+            System.out.println("No animals here ~");
+        }
+    }
+
+    /***
+     * Returns an ArrayList of players animals
+     * @return CopyOnWriteArrayList<Animal> CopyOnWriteArrayList, contains players animals
+     */
+    public CopyOnWriteArrayList<Animal> getAnimalArray(){
+        return playerAnimals;
+    }
+
+    /***
+     * Sell animal. Give player money and remove animal from player
+     *
+     * @param removeAnimal Animal, specific animal object to sell
+     */
+    public void removeAnimal(Animal removeAnimal){
+        float value = removeAnimal.getCost();
+        float health = removeAnimal.getHealth();
+        value = value*(health/100);
+
+        System.out.println(this.playerName + " just sold " + removeAnimal.getName() + " the " + removeAnimal.getType() + " for $" + value);
+        playerCash = playerCash + (int)value;
+        playerAnimals.remove(removeAnimal);
+    }
+
+    /***
+     * Sells all animals' player owns
+     */
+    public void sellAllAnimal(){
+        for(Animal animal: playerAnimals){
+            removeAnimal(animal);
+        }
+    }
+
+    /***
+     * Removes health from players owned animals at the end of the round,
+     * sets animal health to 100 if more than 100.
+     *
+     * Adds dead animals to playerDeadAnimals ArrayList
+     */
+    public void roundEndHealthDecrease(){
+        for(Animal loopanimal: playerAnimals){
+            loopanimal.removeHealthAnimal();
+            if(loopanimal.getHealth() > 100){
+                loopanimal.setHealth(100);
+            }
+            if(loopanimal.getHealth() <= 0){
+                playerDeadAnimals.add(loopanimal);
+                playerAnimals.remove(loopanimal);
+            }
+
+        }
+    }
+
+    /***
+     * Announces dead animals, removes from playerDeadAnimals ArrayList
+     */
+    public void deadAnimalControl(){
+        System.out.println();
+        for(Animal deadanimal: playerDeadAnimals){
+            System.out.println(deadanimal.getName() + " the " + deadanimal.getType() + " has passed away.");
+            playerDeadAnimals.remove(deadanimal);
+        }
+    }
+
+    public Animal AnimalFactorySpawn(Animal animal){
+        switch (animal.getType().toUpperCase()){
+
+            case "CHICKEN":
+                return new Chicken();
+            case "COW":
+                return new Cow();
+            case "CAT":
+                return new Cat();
+            case "DOG":
+                return new Dog();
+            default:
+                return null;
+        }
+    }
+
 }

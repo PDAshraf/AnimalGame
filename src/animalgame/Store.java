@@ -5,162 +5,76 @@ import animalgame.animals.abstractmodels.Animal;
 import animalgame.food.*;
 import animalgame.food.abstractmodels.Food;
 
-import java.util.ArrayList;
-import java.util.Scanner;
+
+
+/***
+ * Store handles buying animals and food, selling animals
+ *
+ * @author Andreas Lindgren, Toriqul Islam Sohan
+ */
 
 public class Store {
-    public Scanner myScan;
-    public Store() {
-        myScan = new Scanner(System.in);
-
-    }
-
-
-    public void buyAnimal(Player player) {
-        ArrayList<Animal> animalChoice = new ArrayList<>();
-        boolean playerChoose = true;
-        System.out.println("Chose a number to buy animal(1-5)");
-        while (playerChoose) {
-            int i=1;
-            System.out.println("1.Cow(200$) 2.Cat(50$) 3.Dog(100$) 4.Chicken(20$)");
-            int animaChoice = animalChoice();
-            System.out.println("Chose Gender\n 1.Male  2.Female");
-            int gendChoice = genderChoice();
-            System.out.println("Name your animal: ");
-            String name = myScan.next();
-            createAnimal(animaChoice,gendChoice,animalChoice,name);
-            player.deliverAnimals(animalChoice);
-            playerChoose=false;
-        }
-    }
-
-    public int animalChoice() {
-        int animalChoice = myScan.nextInt();
-        while (animalChoice < 1 || animalChoice > 4) {
-            System.out.println("Choose between 1-4");
-            animalChoice = myScan.nextInt();
-        }
-        return animalChoice;
-    }
-
-
-
-    public int genderChoice() {
-        int genderChoice = myScan.nextInt();
-        while (!(genderChoice == 1 || genderChoice == 2)) {
-            System.out.println("Not valid, choose 1 or 2");
-            genderChoice = myScan.nextInt();
-        }
-        return genderChoice;
-    }
-
-
-    public void sellAnimal(Player player) {
-        if (player.animalList.isEmpty()) {
-            System.out.println("No animal in your list!");
+    /***
+     * Buys an amount of animals. Checks if players has enough money and such.
+     *
+     *
+     * @param player Player, player object that is shopping
+     * @param animal Animal, animal object corresponding to wanted animal
+     * @param amount int, the number of animals to purchase
+     */
+    public void buyAnimal(Player player, Animal animal, int amount){
+        if(player.getPlayerCash() >= animal.getCost()*amount) {
+            int animalBudget = (int) Math.floor(player.getPlayerCash() / animal.getCost());   //Checks how many animals of chosen type player can afford
+            int purchasedAnimals = 0;
+            if (animalBudget == 0) {                                                          // if 0
+                System.out.println("You couldn't even afford one " + animal.getType());
+            } else {
+                for (int spawnLoop = 0; spawnLoop < amount; spawnLoop++) {
+                    player.setPlayerCash(player.getPlayerCash() - animal.getCost());// else calculate how much cash player has left after buying animals
+                    player.spawnAnimalfromStore(animal);
+                    purchasedAnimals++;
+                }
+                System.out.println("You bought " + purchasedAnimals + " of animal type: " + animal.getType());
+            }
         } else {
+            System.out.println("No credit dude.");
+        }
 
-            //show players animal list
-            System.out.println("Here is your animal list:\n");
-                for (int i = 0; i < player.animalList.size(); i++) {// visa animals
-                    System.out.println(i + "." + player.animalList.get(i).name);
+    }
+    /***
+     * Buys an amount of food. Checks if players has enough money and such.
+     *
+     *
+     * @param player Player, player object that is shopping
+     * @param food Food, food object corresponding to wanted animal
+     * @param amount int, the number of food to purchase
+     */
+    public void buyFood(Player player, Food food, int amount){
+        if(player.getPlayerCash() >= food.getCost()*amount) {
+            int foodBudget = (int) Math.floor(player.getPlayerCash() / food.getCost());        //Checks how many kgs of food of chosen type player can afford
+            int purchasedfood = 0;
+            if ((foodBudget == 0) || (amount > foodBudget)) {                                                             // if 0 or too great
+                System.out.println("Dream on buddy! " + food.getType());
+            } else {
+                player.setPlayerCash(player.getPlayerCash() - (food.getCost()) * amount);                    // else calculate how much cash player has left after buying food
+                for (int spawnLoop = 0; spawnLoop < amount; spawnLoop++) {
+                    player.addPlayerFood(food);
+                    purchasedfood++;
                 }
-                System.out.println("Please choose which Animal you'd like to sell.");
-                int indexChosen = myScan.nextInt();//player choose index for animal to sel;
-                Animal animalToSell = player.animalList.get(indexChosen);//get animal from the list
-
-                int currentHealth = animalToSell.health;
-                int priceToSell = 0;
-                priceToSell = animalToSell.price+(currentHealth*2);
-                System.out.println(animalToSell.name + "is sold for " + priceToSell);
-                player.animalList.remove(animalToSell);
-                player.budget = player.budget + priceToSell;
+                System.out.println("You bought " + purchasedfood + " kg of food type: " + food.getType());
+            }
+        } else {
+            System.out.println("No credit dude.");
         }
     }
 
-
-    public void buyFood(Player player) {
-        ArrayList<Food> foodChosen = new ArrayList<>();
-        ArrayList<Integer> amountChosen = new ArrayList<>();
-            System.out.println("Please choose the number for food you'd like to buy.");
-            System.out.println("1.Vegetable(3kr/kg) 2.Meat(5kr/kg) 3.Milk(2kr/kg) 4.Seed(2kr/kg");
-            int foodChoice = myScan.nextInt();
-            int amount,i=1;
-
-            switch (foodChoice) {
-                case 1: //Vegetable
-                    System.out.println("Amount of vegetables to buy: ");
-                    amount=myScan.nextInt();
-                    foodChosen.add(new Vegetables("Vegetables", 3));
-                    amountChosen.add(amount);
-                    player.deliverFood(foodChosen);
-                    break;
-                case 2: //animalgame.food.Meat
-                    System.out.println("Amount of Meat to buy: ");
-                    amount = myScan.nextInt();
-                    foodChosen.add(new Meat("Meat", 5));
-                    amountChosen.add(amount);
-                    player.deliverFood(foodChosen);
-                    break;
-                case 3://animalgame.food.Milk
-                    System.out.println("Amount of Milk to buy: ");
-                    amount = myScan.nextInt();
-                    foodChosen.add(new Milk("Milk", 2));
-                    amountChosen.add(amount);
-                    player.deliverFood(foodChosen);
-                    break;
-                case 4:
-                    System.out.println("Amount of Seed to buy: ");
-                    amount = myScan.nextInt();
-                    foodChosen.add(new Seed("Seed", 2));
-                    amountChosen.add(amount);
-                    player.deliverFood(foodChosen);
-                    break;
-                default:
-                    System.out.println("Invalid input,try again");
-        }
-    }
-
-    public void createAnimal(int animaChoice, int genderChoice, ArrayList<Animal> animalChoice, String name){
-        switch (animaChoice) {
-            case 1://animalgame.animals.Cow
-                if (genderChoice == 1) { //male
-                    animalChoice.add(new Cow(name, "male"));
-                } else if (genderChoice == 2) {
-                    animalChoice.add(new Cow(name, "female"));
-                } else {
-                    System.out.println("Invalid input");
-                }
-                break;
-            case 2://animalgame.animals.Cat
-                if (genderChoice == 1) { //male
-                    animalChoice.add(new Cat(name, "male"));
-                } else if (genderChoice == 2) {
-                    animalChoice.add(new Cat(name, "female"));
-                } else {
-                    System.out.println("Invalid input");
-                }
-                break;
-            case 3://animalgame.animals.Dog
-                if (genderChoice == 1) { //male
-                    animalChoice.add(new Dog(name, "male"));
-                } else if (genderChoice == 2) {
-                    animalChoice.add(new Dog(name, "female"));
-                } else {
-                    System.out.println("Invalid input");
-                }
-                break;
-            case 4: //animalgame.animals.Chicken
-                if (genderChoice == 1) { //male
-                    animalChoice.add(new Chicken(name, "male"));
-                } else if (genderChoice == 2) {
-                    animalChoice.add(new Chicken(name, "female"));
-                } else {
-                    System.out.println("Invalid input");
-                }
-                break;
-            default:
-                System.out.println("Invalid input!");
-        }
+    /***
+     * Sells animals
+     *
+     * @param player Player, player object corresponding to seller
+     * @param sellAnimal Animal, animalobject to be sold
+     */
+    public void sellAnimal(Player player, Animal sellAnimal){
+        player.removeAnimal(sellAnimal);
     }
 }
