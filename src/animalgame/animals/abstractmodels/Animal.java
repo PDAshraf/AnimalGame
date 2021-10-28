@@ -1,10 +1,5 @@
 package animalgame.animals.abstractmodels;
 
-import animalgame.animals.Cat;
-import animalgame.animals.Chicken;
-import animalgame.animals.Cow;
-import animalgame.animals.Dog;
-
 import java.util.Set;
 
 /**The abstract class for all the animal type classes
@@ -14,34 +9,34 @@ import java.util.Set;
 
 public abstract class Animal {
 
-    public enum Sex { //gender options for the animals
+    public enum Gender { //gender method for animals
         MALE, FEMALE
     }
 
-    public enum Diet { // Diet options for the animals
+    public enum Diet { // Food choices
         HAY,MEAT,MILK,SEED,VEGETABLES
     }
 
-    public Set<Diet> animalDiet; //Interface to set the diet for the animals
+    public Set<Diet> animalDiet; //Set food to animals
 
 
-    private int foodMultiplier; // health increase by food
+    private int foodBoost; // Increase health after food
 
     private String name; // animal name
     private String type; // animal type
 
-    private Sex sex; // animal gender
+    private Gender gender; // animal gender
 
     private int health; //animal health
 
     private int cost; // animal cost
 
     public Animal() { // constructor which is taking the
-        this.sex = (Math.random() < 0.5) ? Sex.MALE : Sex.FEMALE;
+        this.gender = (Math.random() < 0.5) ? Gender.MALE : Gender.FEMALE;
         this.health = 100;
     }
-    public int getFoodMultiplier() { //getter for health increasing value
-        return foodMultiplier;
+    public int getFoodBoost() { //getter for health increasing value
+        return foodBoost;
     }
 
 
@@ -50,8 +45,8 @@ public abstract class Animal {
     }
 
 
-    public void setFoodMultiplier(int foodMultiplier) {
-        this.foodMultiplier = foodMultiplier;
+    public void setFoodBoost(int foodBoost) {
+        this.foodBoost = foodBoost;
     }
 
 
@@ -60,8 +55,8 @@ public abstract class Animal {
     }
 
 
-    public void setSex(Sex sex) {
-        this.sex = sex;
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 
 
@@ -78,7 +73,6 @@ public abstract class Animal {
         return type;
     }
 
-
     public String getName() {
         return name;
     }
@@ -88,8 +82,8 @@ public abstract class Animal {
         this.name = name;
     }
 
-    public Sex getSex() {
-        return sex;
+    public Gender getGender() {
+        return gender;
     }
 
 

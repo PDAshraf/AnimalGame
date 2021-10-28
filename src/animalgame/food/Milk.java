@@ -3,9 +3,9 @@ package animalgame.food;
 import animalgame.food.abstractmodels.Food;
 
 public class Milk extends Food {
-    public Milk() { //constructor to set diet, cost and healthboost
+    public Milk() {
         setDiet(Diet.MILK);
-        setCost(1);
-        setHealthBoost(2);
+        setCost(20);
+        setHealthBoost(20);
     }
 }

@@ -1,8 +1,12 @@
 package animalgame;
 
-public class StartGame {
+/***
+ * Class to start game
+ *
+ * @author Ashraf, Sharshar
+ */
 
-    //animalgame.Player player =new animalgame.Player();
+public class StartGame {
 
     public static void main(String[] args) {
         new Game();

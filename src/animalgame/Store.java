@@ -1,74 +1,64 @@
 package animalgame;
 
-import animalgame.animals.*;
 import animalgame.animals.abstractmodels.Animal;
-import animalgame.food.*;
 import animalgame.food.abstractmodels.Food;
 
 
 
 /***
- * Store handles buying animals and food, selling animals
+ * Store class, handling selling and buying of objects
  *
- * @author Andreas Lindgren, Toriqul Islam Sohan
+ * @author Ashraf, Sharshar
  */
 
 public class Store {
+
     /***
      * Buys an amount of animals. Checks if players has enough money and such.
      *
-     *
-     * @param player Player, player object that is shopping
-     * @param animal Animal, animal object corresponding to wanted animal
-     * @param amount int, the number of animals to purchase
      */
     public void buyAnimal(Player player, Animal animal, int amount){
-        if(player.getPlayerCash() >= animal.getCost()*amount) {
-            int animalBudget = (int) Math.floor(player.getPlayerCash() / animal.getCost());   //Checks how many animals of chosen type player can afford
+        if(player.getPlayerBudget() >= animal.getCost()*amount) {
+            int animalBudget = (int) Math.floor(player.getPlayerBudget() / animal.getCost());   //Checks how many animals of chosen type player can afford
             int purchasedAnimals = 0;
             if (animalBudget == 0) {                                                          // if 0
-                System.out.println("You couldn't even afford one " + animal.getType());
+                System.out.println("Animal prices:  " + animal.getType());
             } else {
-                for (int spawnLoop = 0; spawnLoop < amount; spawnLoop++) {
-                    player.setPlayerCash(player.getPlayerCash() - animal.getCost());// else calculate how much cash player has left after buying animals
-                    player.spawnAnimalfromStore(animal);
+                for (int i = 0; i < amount; i++) {
+                    player.setPlayerBudget(player.getPlayerBudget() - animal.getCost());// else calculate how much cash player has left after buying animals
+                    player.getAnimal(animal);
                     purchasedAnimals++;
                 }
-                System.out.println("You bought " + purchasedAnimals + " of animal type: " + animal.getType());
+                System.out.println("You bought " + purchasedAnimals + " of type: " + animal.getType());
             }
         } else {
-            System.out.println("No credit dude.");
+            System.out.println("No money");
         }
-
     }
     /***
-     * Buys an amount of food. Checks if players has enough money and such.
+     * Buys  food. Check if player can afford it
      *
-     *
-     * @param player Player, player object that is shopping
-     * @param food Food, food object corresponding to wanted animal
-     * @param amount int, the number of food to purchase
      */
     public void buyFood(Player player, Food food, int amount){
-        if(player.getPlayerCash() >= food.getCost()*amount) {
-            int foodBudget = (int) Math.floor(player.getPlayerCash() / food.getCost());        //Checks how many kgs of food of chosen type player can afford
+        if(player.getPlayerBudget() >= food.getCost()*amount) {
+            int foodBudget = (int) Math.floor(player.getPlayerBudget() / food.getCost());        //Checks how many kgs of food of chosen type player can afford
             int purchasedfood = 0;
             if ((foodBudget == 0) || (amount > foodBudget)) {                                                             // if 0 or too great
-                System.out.println("Dream on buddy! " + food.getType());
+                System.out.println("Not available " + food.getType());
             } else {
-                player.setPlayerCash(player.getPlayerCash() - (food.getCost()) * amount);                    // else calculate how much cash player has left after buying food
+                player.setPlayerBudget(player.getPlayerBudget() - (food.getCost()) * amount);                    // else calculate how much cash player has left after buying food
                 for (int spawnLoop = 0; spawnLoop < amount; spawnLoop++) {
                     player.addPlayerFood(food);
                     purchasedfood++;
                 }
-                System.out.println("You bought " + purchasedfood + " kg of food type: " + food.getType());
+                System.out.println("You bought " + purchasedfood + " of type: " + food.getType());
             }
         } else {
-            System.out.println("No credit dude.");
+            System.out.println("No money");
         }
     }
 
-    /***
+    /**
      * Sells animals
      *
      * @param player Player, player object corresponding to seller

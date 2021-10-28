@@ -16,16 +16,16 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import static java.lang.Integer.parseInt;
 
 /***
- * Menu holds most user interaction
+ * Menu for most "game mechanics"
  *
- * @author Andreas Lindgren, Toriqul Islam Sohan
+ * @author Ashraf, Sharshar
  */
 
 public class Menu {
     int choice;
     Scanner scanner;
     Store store = new Store();
-    Chicken chicken = new Chicken();  //Generic reference animals
+    Chicken chicken = new Chicken();
     Cow cow = new Cow();
     Cat cat = new Cat();
     Dog dog = new Dog();
@@ -41,12 +41,8 @@ public class Menu {
         this.scanner = new Scanner(System.in);
     }
 
-    /***
-     * SetupTurnMenu shows menu to chose turns
-     *
-     * @return int, number of rounds, or calls itself recursively
-     */
-    public int SetupTurnMenu() {
+
+    public int initGame() {
         System.out.println("How many rounds do you want to play\nChoose between (5-30)");
         System.out.print("Enter a number -> ");
         String input = scanner.next();
@@ -56,37 +52,15 @@ public class Menu {
                 System.out.println("you chose :" + intInputValue);
                 return intInputValue;
             } else {
-                System.out.println("wrong input!! choose between 5-30 only");
+                System.out.println("Wrong input. Choose between 5-30 rounds");
             }
         } catch (NumberFormatException ne) {
             System.out.println("This is not a number");
         }
-        return SetupTurnMenu();
+        return initGame();
     }
 
-    /***
-     * SetupCashMenu
-     *
-     * @return int, amount of cash, or calls itself recursively
-     */
-    public int SetupCashMenu() {
-        System.out.println("How much cash should players start with?");
-        System.out.print("Enter a number -> ");
-        String input = scanner.next();
-        try {
-            choice = parseInt(input);
-            return choice;
 
-        } catch (NumberFormatException ne) {
-            System.out.println("This is not a number");
-        }
-        return SetupCashMenu();
-    }
-    /***
-     * SetupPlayerMenu
-     *
-     * @return int, number of players, or calls itself recursively
-     */
     public int SetupPlayerMenu() {
         System.out.println("How many players are playing?\nChoose between (1-4)");
         System.out.print("Enter a number -> ");
@@ -109,29 +83,17 @@ public class Menu {
         return SetupPlayerMenu();
     }
 
-    /***
-     * Sets name of player with index playerNumber
-     *
-     * @param playerNumber player index in ArrayList
-     * @return consol input
-     */
-    public String SetupPlayerName(int playerNumber) {
+    public String setPlayerName(int playerNumber) {
         System.out.println("Enter name of player " + (1 + playerNumber) + ": ");
         return scanner.next();
     }
 
-    /***
-     * Prints current turn, current player, inventory, etc.
-     *
-     * @param player current player object
-     * @param gameCurrentTurn current game turn
-     */
-    public void PrintPlayerStatus(Player player, int gameCurrentTurn) {
+
+    public void getPlayerStatus(Player player, int gameCurrentTurn) {
         System.out.println("\nCURRENT TURN: " + gameCurrentTurn);
         System.out.println("CURRENT PLAYER: " + player.getPlayerName() + "\n");
-
         System.out.println(player.getPlayerName() +
-                " - Current $: " + player.getPlayerCash() +
+                " - Current $: " + player.getPlayerBudget() +
                 " - Available food: - hay, " +
                 player.getPlayerFood(hay) + " kgs - Meat, " +
                 player.getPlayerFood(meat) + " liters - Milk, " +
@@ -140,16 +102,9 @@ public class Menu {
                 player.getPlayerFood(vegetables) + " kgs\n");
         System.out.println(player.getPlayerName() + " owns the following animals:");
         player.countAnimals();
-
-
     }
 
-    /***
-     * Shows main game menu
-     *
-     * @param player current player object
-     */
-    public void GameplayMenu(Player player) {
+    public void gameMenu(Player player) {
         System.out.println("""
                 Let the game begin:: Choose from below
                 1.Buy Animal
@@ -167,26 +122,21 @@ public class Menu {
                 case 1 -> animalStoreBuy(player);
                 case 2 -> foodStoreBuy(player);
                 case 3 -> feedAnimal(player);
-                case 4 -> breedAnimal(player);
+                case 4 -> mateAnimal(player);
                 case 5 -> animalStoreSell(player);
-                default -> System.out.println("Neit, ostorozhnyy!");
+                default -> System.out.println("Not valid");
             }
         } catch (NumberFormatException ne) {
-            System.out.println("This is not a number");
+            System.out.println("Not a number. Enter a number");
         }
     }
 
-    /***
-     * Shows store menu for animals
-     *
-     * @param player current player object
-     */
     public void animalStoreBuy(Player player) {
-        System.out.println("Buys an amount of chosen animals.\n");
-        System.out.println("(1) " + chicken.getType() + " ~ $" + chicken.getCost() + " each. Diet: " + chicken.getDiet());
-        System.out.println("(2) " + cat.getType() + " ~ $" + cat.getCost() + " each. Diet: " + cat.getDiet());
-        System.out.println("(3) " + dog.getType() + " ~ $" + dog.getCost() + " each. Diet: " + dog.getDiet());
-        System.out.println("(4) " + cow.getType() + " ~ $" + cow.getCost() + " each. Diet: " + cow.getDiet());
+        System.out.println("Buy an amount of chosen animals.\n");
+        System.out.println("(1) " + chicken.getType() + "  $" + chicken.getCost() + " . Diet: " + chicken.getDiet());
+        System.out.println("(2) " + cat.getType() + "  $" + cat.getCost() + " . Diet: " + cat.getDiet());
+        System.out.println("(3) " + dog.getType() + "  $" + dog.getCost() + " . Diet: " + dog.getDiet());
+        System.out.println("(4) " + cow.getType() + "  $" + cow.getCost() + " . Diet: " + cow.getDiet());
         System.out.print("Enter your number -> ");
         String input = scanner.next();
         System.out.println("How many do you want to buy?");
@@ -198,7 +148,7 @@ public class Menu {
                 case 3 -> store.buyAnimal(player, dog, parseInt(amount));
                 case 4 -> store.buyAnimal(player, cow, parseInt(amount));
                 default -> {
-                    System.out.println("This is not a choice, what the hell man.\n");
+                    System.out.println("Invalid choice\n");
                     animalStoreBuy(player);
                 }
             }
@@ -207,20 +157,16 @@ public class Menu {
         }
     }
 
-    /***
-     * Shows store menu for food
-     *
-     * @param player current player object
-     */
+
     private void foodStoreBuy(Player player) {
-        System.out.println("Buys an amount of chosen food.\n");
-        System.out.println("(1) " + hay.getType() + " ~ $" + hay.getCost() + " per kg. Health boost: " + hay.getHealthBoost());
-        System.out.println("(2) " + meat.getType() + " ~ $" + meat.getCost() + " per kg. Health boost: " + meat.getHealthBoost());
-        System.out.println("(3) " + milk.getType() + " ~ $" + milk.getCost() + " per kg. Health boost: " + milk.getHealthBoost());
-        System.out.println("(4) " + seed.getType() + " ~ $" + seed.getCost() + " per kg. Health boost: " + seed.getHealthBoost());
-        System.out.println("(4) " + vegetables.getType() + " ~ $" + vegetables.getCost() + " per kg. Health boost: " + vegetables.getHealthBoost());
+        System.out.println("Buy an amount of chosen food.\n");
+        System.out.println("(1) " + hay.getType() + "  $" + hay.getCost() + " per kg. Health boost: " + hay.getHealthBoost());
+        System.out.println("(2) " + meat.getType() + "  $" + meat.getCost() + " per kg. Health boost: " + meat.getHealthBoost());
+        System.out.println("(3) " + milk.getType() + "  $" + milk.getCost() + " per liter. Health boost: " + milk.getHealthBoost());
+        System.out.println("(4) " + seed.getType() + "  $" + seed.getCost() + " per kg. Health boost: " + seed.getHealthBoost());
+        System.out.println("(5) " + vegetables.getType() + "  $" + vegetables.getCost() + " per kg. Health boost: " + vegetables.getHealthBoost());
         String input = scanner.next();
-        System.out.println("How many kgs do you want to buy?");
+        System.out.println("How much do you want to buy?");
         String amount = scanner.next();
         switch (parseInt(input)) {
             case 1 -> store.buyFood(player, hay, parseInt(amount));
@@ -229,47 +175,43 @@ public class Menu {
             case 4 -> store.buyFood(player, seed, parseInt(amount));
             case 5 -> store.buyFood(player, vegetables, parseInt(amount));
             default -> {
-                System.out.println("There's only three kinds of food\n");
+                System.out.println("Invalid choice\n");
                 foodStoreBuy(player);
             }
         }
     }
 
-    /***
-     * Shows menu for feeding animals
-     *
-     * @param player current player object
-     */
+
     private void feedAnimal(Player player) {
-        Food foodInPile = null;
+        Food foodInStack = null;
         Animal feedingAnimal = null;
-        int foodPile;
+        int foodStack;
 
         System.out.println("Which animals do you want to feed?.\n");
-        System.out.println("(1) " + chicken.getType() + " ~ Diet: " + chicken.getDiet());
-        System.out.println("(2) " + cat.getType() + " ~ Diet: " + cat.getDiet());
-        System.out.println("(3) " + dog.getType() + " ~ Diet: " + dog.getDiet());
-        System.out.println("(4) " + cow.getType() + " ~ Diet: " + cow.getDiet());
+        System.out.println("(1) " + chicken.getType() + " . Diet: " + chicken.getDiet());
+        System.out.println("(2) " + cat.getType() + " . Diet: " + cat.getDiet());
+        System.out.println("(3) " + dog.getType() + " . Diet: " + dog.getDiet());
+        System.out.println("(4) " + cow.getType() + " . Diet: " + cow.getDiet());
         System.out.print("Enter animal: ");
         String fedAnimal = scanner.next();
-        System.out.println("(1) " + hay.getType() + " ~ Health boost: " + hay.getHealthBoost());
-        System.out.println("(2) " + meat.getType() + " ~ Health boost: " + meat.getHealthBoost());
-        System.out.println("(3) " + milk.getType() + " ~ Health boost: " + milk.getHealthBoost());
-        System.out.println("(4) " + seed.getType() + " ~ Health boost: " + seed.getHealthBoost());
-        System.out.println("(5) " + vegetables.getType() + " ~ Health boost: " + vegetables.getHealthBoost());
+        System.out.println("(1) " + hay.getType() + " . Health boost: " + hay.getHealthBoost());
+        System.out.println("(2) " + meat.getType() + " . Health boost: " + meat.getHealthBoost());
+        System.out.println("(3) " + milk.getType() + " . Health boost: " + milk.getHealthBoost());
+        System.out.println("(4) " + seed.getType() + " . Health boost: " + seed.getHealthBoost());
+        System.out.println("(5) " + vegetables.getType() + " . Health boost: " + vegetables.getHealthBoost());
         System.out.println("Enter food type: ");
         String chosenFood = scanner.next();
-        System.out.println("Enter kgs of food: ");
+        System.out.println("Enter amount of food: ");
         String foodAmount = scanner.next();
 
         try {
             switch (parseInt(chosenFood)) {
-                case 1 -> foodInPile = hay;
-                case 2 -> foodInPile = meat;
-                case 3 -> foodInPile = milk;
-                case 4 -> foodInPile = seed;
-                case 5 -> foodInPile = vegetables;
-                default -> foodInPile = none;
+                case 1 -> foodInStack = hay;
+                case 2 -> foodInStack = meat;
+                case 3 -> foodInStack = milk;
+                case 4 -> foodInStack = seed;
+                case 5 -> foodInStack = vegetables;
+                default -> foodInStack = none;
 
             }
 
@@ -285,36 +227,36 @@ public class Menu {
             System.out.println("This is not even a number\n");
         }
 
-        foodPile = parseInt(foodAmount);
+        foodStack = parseInt(foodAmount);
 
-        if (foodPile > player.getPlayerFood(foodInPile)) {
-            System.out.println("Can't feed animals with food you don't have.");
+        if (foodStack > player.getPlayerFood(foodInStack)) {
+            System.out.println("Not valid with no food.");
             feedAnimal(player);
         } else {
             CopyOnWriteArrayList<Animal> playersAnimals = player.getAnimalArray();
-            while (foodPile > 0) {
+            while (foodStack > 0) {
                 for (Animal individual : playersAnimals) {
                     assert feedingAnimal != null;
                     if (individual.getType().equals(feedingAnimal.getType())) {
                         String pickyEater = String.valueOf(individual.getDiet());
 
-                        String currentServed = String.valueOf(foodInPile.getType());
+                        String currentServed = String.valueOf(foodInStack.getType());
                         if (pickyEater.contains(currentServed)) {
                             if (individual.getHealth() > 100) {
                                 individual.setHealth(100);
                             } else {
-                                int healingfromfood = foodInPile.getHealthBoost() * individual.getFoodMultiplier();
+                                int healingfromfood = foodInStack.getHealthBoost() * individual.getFoodBoost();
                                 int individualhealth = individual.getHealth();
                                 individual.setHealth((individualhealth + healingfromfood));
-                                player.removePlayerFood(foodInPile);
-                                foodPile = foodPile - 1;
+                                player.removePlayerFood(foodInStack);
+                                foodStack = foodStack - 1;
                                 System.out.println(individual.getName() + " the " + individual.getType() +
-                                        " ate 1 kg of " +  foodInPile.getType().toString().toLowerCase() +
+                                        " ate of " +  foodInStack.getType().toString().toLowerCase() +
                                         ", new health is " +  individual.getHealth());
                             }
                         } else {
-                            System.out.println("Invalid choice, go directly to jail...");
-                            foodPile = 0;
+                            System.out.println("Invalid choice.");
+                            foodStack = 0;
                             feedAnimal(player);
                         }
 
@@ -324,16 +266,12 @@ public class Menu {
         }
     }
 
-    /***
-     * Shows menu for breeding animals
-     *
-     * @param player current player object
-     */
-    private void breedAnimal(Player player) {
+
+    private void mateAnimal(Player player) {
         int males = 0;
         int females = 0;
         int pairs = 0;
-        Animal breedingAnimal = null;
+        Animal animalMate = null;
 
         System.out.println("Which animals do you want to breed?.\n");
         System.out.println("(1) " + chicken.getType());
@@ -343,23 +281,23 @@ public class Menu {
         System.out.print("Enter animal: ");
 
         switch (parseInt(scanner.next())) {
-            case 1 -> breedingAnimal = chicken;
-            case 2 -> breedingAnimal = cat;
-            case 3 -> breedingAnimal = dog;
-            case 4 -> breedingAnimal = cow;
+            case 1 -> animalMate = chicken;
+            case 2 -> animalMate = cat;
+            case 3 -> animalMate = dog;
+            case 4 -> animalMate = cow;
             default -> System.out.println("Not valid\n");
         }
 
         ArrayList<Animal> singletype = new ArrayList<>();
         for (Animal individual : player.getAnimalArray()) {
 
-            if (individual.getType().equals(breedingAnimal.getType())) {
+            if (individual.getType().equals(animalMate.getType())) {
                 singletype.add(individual);
             }
         }
         for (Animal individual : singletype) {
 
-            if (individual.getSex().equals(Animal.Sex.MALE)) {
+            if (individual.getGender().equals(Animal.Gender.MALE)) {
                 males++;
             } else {
                 females++;
@@ -373,26 +311,21 @@ public class Menu {
 
         for (int breedLoop = pairs; breedLoop > 0; breedLoop--) {
             if ((Math.random() < 0.5)) {
-                player.spawnAnimalfromBreeding(breedingAnimal);
+                player.spawnAnimalfromBreeding(animalMate);
             } else {
-                System.out.println("Failed attempt");
+                System.out.println("Not Valid");
             }
         }
 
     }
 
-    /***
-     * Shows menu for selling animals
-     *
-     * @param player current player object
-     */
     public void animalStoreSell(Player player) {
         player.countAnimals();
         CopyOnWriteArrayList<Animal> playerInventory = player.getAnimalArray();
         String sold;
 
         System.out.println("Which animals do you want to sell?.\n");
-        System.out.print("Enter animals (e.g. 1, 6, 15, 70...) : ");
+        System.out.print("Enter animal(1,2,3...): ");
         sold = scanner.next();
         List<String> currentlySelling = List.of(sold.split(","));
         ArrayList<Animal> markedSold = new ArrayList<>();

@@ -3,6 +3,6 @@ import animalgame.food.abstractmodels.Food;
 
 public class None extends Food{
     public None(){
-        setDiet(Diet.NONE);
+        setDiet(Diet.NULL);
     }
 }
